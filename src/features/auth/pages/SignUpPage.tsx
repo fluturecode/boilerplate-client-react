@@ -1,12 +1,13 @@
-import { FC } from 'react';
-import { useHistory } from 'react-router-dom';
-import { useSignUpMutation } from 'common/api/userApi';
-import { handleApiError } from 'common/api/handleApiError';
+import logo from 'assets/img/logo.jpeg';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
+import { handleApiError } from 'common/api/handleApiError';
+import { useSignUpMutation } from 'common/api/userApi';
+import { LoginContainer, LoginRightCol, Title } from 'common/components/FrontPageLayout';
 import * as notificationService from 'common/services/notification';
+import { FC } from 'react';
+import { Col, Container, Row } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
 import { FormData, SignUpForm } from '../components/SignUpForm';
-import { PageWrapper } from 'common/styles/page';
-import { StyledFormWrapper, Title } from 'common/styles/form';
 
 export const SignUpPage: FC = () => {
   const history = useHistory();
@@ -27,11 +28,26 @@ export const SignUpPage: FC = () => {
   const onCancel = () => history.push('/auth/login');
 
   return (
-    <PageWrapper>
-      <StyledFormWrapper>
-        <Title>Sign Up</Title>
-        <SignUpForm onSubmit={onSubmit} onCancel={onCancel} />
-      </StyledFormWrapper>
-    </PageWrapper>
+    <Container fluid>
+      <Row>
+        <Col>
+          <LoginContainer>
+            <div>
+              <img src={logo} alt='Bitwise Logo' />
+              <Title>Member Registration</Title>
+              <p className="text-muted">Register for the Bitwise Admin Panel to join the best admin panel on the internet.</p>
+              <SignUpForm onSubmit={onSubmit} onCancel={onCancel} />
+              <div className='mt-2 mb-2'>
+                <small>
+                Already have an account? <Link to="/auth/login">Log In</Link>
+                </small>
+              </div>
+            </div>
+          </LoginContainer>
+        </Col>
+
+        <LoginRightCol />
+      </Row>
+    </Container>
   );
 };

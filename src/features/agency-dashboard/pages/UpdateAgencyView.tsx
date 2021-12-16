@@ -1,11 +1,13 @@
-import { FC, useEffect } from 'react';
-import { useHistory, useParams } from 'react-router-dom';
-import { AgencyDetailForm, FormData } from '../components/AgencyDetailForm';
-import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useGetAgencyByIdQuery, useUpdateAgencyMutation } from 'common/api/agencyApi';
+import { FormCard, PageHeader } from 'common/components/Common';
+import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
 import * as notificationService from 'common/services/notification';
-import { PageWrapper } from 'common/styles/page';
-import { StyledFormWrapper, Title } from 'common/styles/form';
+import { StyledFormWrapper } from 'common/styles/form';
+import { FC, useEffect } from 'react';
+import { Card, Col, Container, Row } from 'react-bootstrap';
+import { Link, useHistory, useParams } from 'react-router-dom';
+import { AgencyDetailForm, FormData } from '../components/AgencyDetailForm';
 
 export interface RouteParams {
   id: string;
@@ -24,10 +26,6 @@ export const UpdateAgencyView: FC = () => {
     }
   }, [error, history]);
 
-  const handleFormCancel = () => {
-    history.goBack();
-  };
-
   const handleFormSubmit = async (data: FormData) => {
     try {
       await updateAgency({ id: Number(id), ...data }).unwrap();
@@ -39,18 +37,34 @@ export const UpdateAgencyView: FC = () => {
   };
 
   return (
-    <PageWrapper>
-      <WithLoadingOverlay isLoading={isLoadingAgency}>
-        <StyledFormWrapper>
-          <Title>Update Agency</Title>
-          <AgencyDetailForm
-            defaultValues={{ agencyName: agency?.agencyName ?? '' }}
-            submitButtonLabel='UPDATE'
-            onSubmit={handleFormSubmit}
-            onCancel={handleFormCancel}
-          />
-        </StyledFormWrapper>
-      </WithLoadingOverlay>
-    </PageWrapper>
+    <Container>
+      <PageHeader>
+        <div>
+          <h1>Edit Agency</h1>
+          <Link to='/agencies'>
+            <FontAwesomeIcon icon={["fas", "chevron-left"]} />  Back to Agency List
+          </Link>
+        </div>
+      </PageHeader>
+
+      <Row>
+        <Col>
+          <FormCard>
+            <Card.Body>
+              <WithLoadingOverlay isLoading={isLoadingAgency}>
+                <StyledFormWrapper>
+                  <AgencyDetailForm
+                    defaultValues={{ agencyName: agency?.agencyName ?? '' }}
+                    submitButtonLabel='Update'
+                    onSubmit={handleFormSubmit}
+                  />
+                </StyledFormWrapper>
+              </WithLoadingOverlay>
+            </Card.Body>
+          </FormCard>
+        </Col>
+      </Row>
+      
+    </Container>
   );
 };

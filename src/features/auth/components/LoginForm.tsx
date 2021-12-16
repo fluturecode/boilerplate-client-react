@@ -1,10 +1,14 @@
-import { useForm } from 'react-hook-form';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { FC } from 'react';
+import { CustomButton } from 'common/styles/button';
+import { FC, useState } from 'react';
+import { Button, InputGroup } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
-import * as yup from 'yup';
+import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
 import { Constants } from 'utils/constants';
-import { ButtonWrapper, SubmitButton } from 'common/styles/button';
+import * as yup from 'yup';
 
 export type FormData = {
   email: string;
@@ -20,6 +24,20 @@ const schema: yup.SchemaOf<FormData> = yup.object().shape({
   password: yup.string().required(Constants.errorMessages.PASSWORD_REQUIRED),
 });
 
+const ForgotPassword = styled.div`
+  text-align: right !important;
+  margin-top: 0.5rem;
+  a {
+    text-decoration: none;
+  }
+`;
+
+const TogglePasswordButton = styled(Button)`
+  border-top-right-radius: 3px !important;
+  border-bottom-right-radius: 3px !important;
+  border-color: #ced4da;
+`;
+
 export const LogInForm: FC<Props> = ({ onSubmit }) => {
   const {
     formState: { errors, isValid },
@@ -30,6 +48,8 @@ export const LogInForm: FC<Props> = ({ onSubmit }) => {
     mode: 'all',
   });
 
+  const [showingPassword, setShowingPassword] = useState(false);
+
   return (
     <Form data-testid='loginForm' onSubmit={handleSubmit(onSubmit)}>
       <Form.Group>
@@ -38,7 +58,7 @@ export const LogInForm: FC<Props> = ({ onSubmit }) => {
           id='email'
           type='email'
           {...register('email')}
-          placeholder='Enter email'
+          placeholder='Email'
           isInvalid={!!errors.email}
         />
         <Form.Control.Feedback type='invalid' role='alert'>
@@ -47,22 +67,32 @@ export const LogInForm: FC<Props> = ({ onSubmit }) => {
       </Form.Group>
       <Form.Group>
         <Form.Label htmlFor='password'>Password</Form.Label>
-        <Form.Control
-          id='password'
-          type='password'
-          {...register('password')}
-          placeholder='Enter password'
-          isInvalid={!!errors.password}
-        />
-        <Form.Control.Feedback type='invalid' role='alert'>
-          {errors.password?.message}
-        </Form.Control.Feedback>
+        <InputGroup>
+          <Form.Control
+            id='password'
+            {...register('password')}
+            type={showingPassword ? 'text' : 'password'}
+            placeholder='Password'
+            isInvalid={!!errors.password}
+          />
+          <TogglePasswordButton variant='outline-secondary' onClick={() => setShowingPassword(!showingPassword)}>
+            <FontAwesomeIcon icon={['fas', showingPassword ? 'eye-slash' : 'eye']} />
+          </TogglePasswordButton>
+          <Form.Control.Feedback type='invalid' role='alert'>
+            {errors.password?.message}
+          </Form.Control.Feedback>
+        </InputGroup>
       </Form.Group>
-      <ButtonWrapper>
-        <SubmitButton type='submit' disabled={!isValid}>
-          LOG IN
-        </SubmitButton>
-      </ButtonWrapper>
+      <ForgotPassword>
+        <small>
+          <Link to='/auth/forgot-password'>Forgot Password?</Link>
+        </small>
+      </ForgotPassword>
+      <div className='d-grid mt-2'>
+        <CustomButton type='submit' disabled={!isValid}>
+          Log In
+        </CustomButton>
+      </div>
     </Form>
   );
 };

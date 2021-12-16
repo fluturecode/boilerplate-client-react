@@ -1,21 +1,58 @@
-import { CustomRenderer, GenericTable, TableHeader } from 'common/components';
-import ActionButton, { ActionButtonProps } from 'common/components/ActionButton';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useDeleteAgencyMutation, useGetAgenciesQuery } from 'common/api/agencyApi';
+import { PageHeader, TableCard } from 'common/components/Common';
+import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
 import { useConfirmationModal } from 'common/hooks';
 import { Agency } from 'common/models';
-import { Link, useHistory } from 'react-router-dom';
-import { FC } from 'react';
-import Container from 'react-bootstrap/Container';
-import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
-import { HasPermission, useRbac } from 'features/rbac';
-import { useDeleteAgencyMutation, useGetAgenciesQuery } from 'common/api/agencyApi';
 import * as notificationService from 'common/services/notification';
 import { CreateButton } from 'common/styles/button';
+import { HasPermission, useRbac } from 'features/rbac';
+import moment from 'moment';
+import { FC } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import Container from 'react-bootstrap/Container';
+import { Link, useHistory } from 'react-router-dom';
+import styled from 'styled-components';
 
-type AgencyTableItem = {
-  id: number;
-  name: string;
-  actions: ActionButtonProps[];
-};
+const AgencyDetail = styled.div`
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  h2 {
+    flex: 1;
+    font-size: 1.2rem;
+    margin-left: 1rem;
+
+    span {
+      display: block;
+      font-size: 0.8rem;
+      color: #999;
+    }
+  }
+  & > div {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+    padding: 0 1.5rem;
+    background: ${props => props.theme.colors.lightAccent};
+    text-align: center;
+    span {
+      display: block;
+      font-size: 0.8rem;
+      color: #11648f;
+      text-transform: uppercase;
+      margin-top: -10px;
+      letter-spacing: 2px;
+      font-weight: normal;
+    }
+    p {
+      color: #11648f;
+      font-weight: 600;
+      font-size: 3rem;
+      display: inline-block;
+    }
+  }
+`;
 
 export const AgencyListView: FC = () => {
   const history = useHistory();
@@ -38,58 +75,45 @@ export const AgencyListView: FC = () => {
     openModal(message, onConfirm, onCancel);
   };
 
-  // Set up table headers
-  const headers: TableHeader<AgencyTableItem>[] = [
-    { key: 'name', label: 'AGENCY NAME' },
-    { key: 'actions', label: 'ACTIONS' },
-  ];
-
-  // Transform Agency objects returned from the API into the table item data format expected by the table.
-  const items: AgencyTableItem[] = agencies.map(agency => ({
-    id: agency.id,
-    name: agency.agencyName,
-    actions: [
-      {
-        icon: 'edit',
-        tooltipText: 'Edit',
-        onClick: () => history.push(`/agencies/update-agency/${agency.id}`),
-        show: userHasPermission('agency:update'),
-      },
-      {
-        icon: 'trash-alt',
-        tooltipText: 'Delete',
-        onClick: () => handleDelete(agency),
-        show: userHasPermission('agency:delete'),
-      },
-    ],
-  }));
-
-  // Specify custom render methods for any property in the table items that need to be rendered as a custom component.
-  // Here we want the actions to be rendered using a custom component.
-  const customRenderers: CustomRenderer<AgencyTableItem>[] = [
-    {
-      key: 'actions',
-      renderer: ({ actions, id }: AgencyTableItem) => (
-        <>
-          {actions.map(action => (
-            <ActionButton key={id} {...action} />
-          ))}
-        </>
-      ),
-    },
-  ];
-
   return (
     <Container>
-      <HasPermission perform='agency:create'>
-        <div className='pb-4 text-end'>
-          <Link to='/agencies/create-agency'>
-            <CreateButton>ADD AGENCY</CreateButton>
+      <PageHeader>
+        <div>
+          <h1>Agency List</h1>
+          <Link to='/'>
+            <FontAwesomeIcon icon={["fas", "chevron-left"]} />  Back to Dashboard
           </Link>
         </div>
-      </HasPermission>
+        <HasPermission perform='agency:create'>
+          <div>
+            <Link to='/agencies/create-agency'>
+              <CreateButton>Add Agency</CreateButton>
+            </Link>
+          </div>
+        </HasPermission>
+      </PageHeader>
+
       <WithLoadingOverlay isLoading={isLoadingAgencies}>
-        <GenericTable<AgencyTableItem> headers={headers} items={items} customRenderers={customRenderers} />
+        <Row>
+          {agencies.map((item) => (
+            <Col xs={4}>
+              <TableCard onClick={() => history.push(`/agencies/update-agency/${item.id}`)} className='mb-3'>
+                <AgencyDetail>
+                  <h2>
+                    {item.agencyName}
+                    <span>{moment(item.createdAt).format('LL')}</span>
+                  </h2>
+                  <div>
+                    <p>
+                      {item.userCount}
+                      <span>User{item.userCount === 1 ? '' : 's'}</span>
+                    </p>
+                  </div>
+                </AgencyDetail>
+              </TableCard>
+            </Col>
+          ))}
+        </Row>
       </WithLoadingOverlay>
       <ConfirmationModal />
     </Container>

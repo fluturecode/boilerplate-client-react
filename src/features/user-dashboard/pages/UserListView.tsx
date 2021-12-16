@@ -15,6 +15,9 @@ import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
 import { HasPermission, useRbac } from 'features/rbac';
 import * as notificationService from 'common/services/notification';
 import { CreateButton } from 'common/styles/button';
+import { Badge, Card } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { PageHeader, TableCard } from 'common/components/Common';
 
 type UserTableItem = {
   id: number;
@@ -83,13 +86,22 @@ export const UserListView: FC = () => {
   };
 
   const headers: TableHeader<UserTableItem>[] = [
-    { key: 'lastName', label: 'LAST NAME' },
-    { key: 'firstName', label: 'FIRST NAME' },
-    { key: 'email', label: 'EMAIL' },
-    { key: 'role', label: 'ROLE' },
-    { key: 'activatedAt', label: 'ACTIVATED' },
-    { key: 'actions', label: 'ACTIONS' },
+    { key: 'lastName', label: 'Last Name' },
+    { key: 'firstName', label: 'First Name' },
+    { key: 'email', label: 'Email' },
+    { key: 'role', label: 'Role' },
+    { key: 'activatedAt', label: 'Activated' },
+    { key: 'actions', label: '' },
   ];
+
+  const roleColor = (role: string) => {
+    return {
+      'Super Administrator': 'danger',
+      'Admin': 'warning',
+      'User': 'secondary',
+      'Editor': 'info'
+    }[role] || 'secondary';
+  }
 
   const items: UserTableItem[] = users.map(user => ({
     id: user.id,
@@ -129,13 +141,22 @@ export const UserListView: FC = () => {
 
   const customRenderers: CustomRenderer<UserTableItem>[] = [
     {
+      key: 'role',
+      renderer: ({ role }) => (
+        <Badge pill bg={roleColor(role)}>{role}</Badge>
+      )
+    },
+    {
       key: 'activatedAt',
       renderer: ({ activatedAt }) => (
         <>
           {activatedAt instanceof Date ? (
             new Intl.DateTimeFormat('en-US', { dateStyle: 'long' }).format(activatedAt)
           ) : (
-            <ActionButton {...activatedAt} />
+            <>
+              <span>Not Activated</span>
+              <ActionButton {...activatedAt} />
+            </>
           )}
         </>
       ),
@@ -154,16 +175,29 @@ export const UserListView: FC = () => {
 
   return (
     <Container>
-      <HasPermission perform='user:create'>
-        <div className='mb-4 text-end'>
-          <Link to='/users/create-user'>
-            <CreateButton>ADD USER</CreateButton>
+      <PageHeader>
+        <div>
+          <h1>User List</h1>
+          <Link to='/'>
+            <FontAwesomeIcon icon={["fas", "chevron-left"]} />  Back to Dashboard
           </Link>
         </div>
-      </HasPermission>
-      <WithLoadingOverlay isLoading={isLoadingUsers}>
-        <GenericTable<UserTableItem> headers={headers} items={items} customRenderers={customRenderers} />
-      </WithLoadingOverlay>
+        <HasPermission perform='user:create'>
+          <div>
+            <Link to='/users/create-user'>
+              <CreateButton>Add User</CreateButton>
+            </Link>
+          </div>
+        </HasPermission>
+      </PageHeader>
+
+      <TableCard>
+        <Card.Body>
+          <WithLoadingOverlay isLoading={isLoadingUsers}>
+            <GenericTable<UserTableItem> headers={headers} items={items} customRenderers={customRenderers} />
+          </WithLoadingOverlay>
+          </Card.Body>
+      </TableCard>
       <ConfirmationModal />
     </Container>
   );

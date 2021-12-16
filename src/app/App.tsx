@@ -19,9 +19,9 @@ export const App: FC = () => (
   <ErrorBoundary>
     <ThemeProvider theme={AppTheme}>
       <NotificationContainer />
-      <HolyGrailLayout>
-        <Switch>
-          <Route path='/auth' component={AuthRoutes} />
+      <Switch>
+        <Route path='/auth' component={AuthRoutes} />
+        <HolyGrailLayout>
           <PrivateRoute exact path='/user/profile/:id' component={UpdateUserProfilePage} />
           <PrivateRoute exact path='/user/change-password/:id' component={ChangePasswordPage} />
           <PrivateRoute path='/agents' component={AgentRoutes} />
@@ -30,9 +30,9 @@ export const App: FC = () => (
           <PrivateRoute exact path='/'>
             <Redirect to='/agents' />
           </PrivateRoute>
-          <Route component={NotFoundView} />
-        </Switch>
-      </HolyGrailLayout>
+        </HolyGrailLayout>
+        <Route component={NotFoundView} />
+      </Switch>
     </ThemeProvider>
     <GlobalStyle />
   </ErrorBoundary>

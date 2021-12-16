@@ -10,22 +10,36 @@ import { CancelButton, SubmitButton } from 'common/styles/button';
 const BootstrapModal: FC<ModalProps> = ({ children, ...rest }) => <Modal {...rest}>{children}</Modal>;
 
 export const StyledModal = styled(BootstrapModal)`
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+
+  .modal-dialog {
+    border-radius: 24px;
+    border: none;
+
+    @media screen and (min-width: 576px) {
+      min-width: 500px;
+    }
+  }
+
   & .modal-header {
     border: none;
   }
 
   & .modal-content {
-    padding: 50px;
-    background-color: ${props => props.theme.modals.confirmation.contentBackgroundColor};
-    border-color: ${props => props.theme.modals.confirmation.contentBorderColor};
+    background: white;
+    border-radius: 24px;
+    border: none;
   }
 
   & .modal-title {
-    color: ${props => props.theme.modals.confirmation.titleTextColor};
+    padding: 50px 50px 0 50px;
   }
 
   & .modal-body {
-    padding: 10px 0;
+    margin-top: 0.25rem;
+    padding: 0 50px;
     color: ${props => props.theme.modals.confirmation.bodyTextColor};
   }
 
@@ -34,10 +48,23 @@ export const StyledModal = styled(BootstrapModal)`
     padding: 0;
     border: none;
     justify-content: center;
-  }
+    display: flex;
+    flex-direction: row;
 
-  button:first-of-type {
-    margin-right: 10px;
+    button {
+      display: block;
+      height: 50px;
+      margin: 0;
+      width: 50%;
+
+      &:first-of-type {
+        border-radius: 0 0 0 24px;
+      }
+
+      &:last-of-type {
+        border-radius: 0 0 24px 0;
+      }
+    }
   }
 `;
 export const ConfirmationModal: FC<ConfirmationModalProps> = ({

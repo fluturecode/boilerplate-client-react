@@ -1,10 +1,11 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Agency, Role, User } from 'common/models';
+import { SubmitButton } from 'common/styles/button';
 import { FC, useEffect } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { useForm } from 'react-hook-form';
 import * as yup from 'yup';
-import { ButtonWrapper, CancelButton, SubmitButton } from 'common/styles/button';
 
 export type FormData = Pick<User, 'email' | 'firstName' | 'lastName' | 'profilePicture' | 'role' | 'agency'>;
 
@@ -34,17 +35,14 @@ export const UserDetailForm: FC<Props> = ({
   availableRoles,
   availableAgencies,
   defaultValues = {},
-  submitButtonLabel = 'SUBMIT',
-  cancelButtonLabel = 'CANCEL',
+  submitButtonLabel = 'Submit',
   onSubmit,
-  onCancel,
 }) => {
   const {
     formState: { errors, isValid },
     handleSubmit,
     register,
     setValue,
-    trigger,
     watch,
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -63,11 +61,6 @@ export const UserDetailForm: FC<Props> = ({
 
   const watchRoleName = watch('role.roleName');
   const watchAgencyName = watch('agency.agencyName');
-
-  // Trigger validation on first render.
-  useEffect(() => {
-    trigger();
-  }, [trigger]);
 
   // Update role id in response to role select value changing.
   useEffect(() => {
@@ -89,63 +82,76 @@ export const UserDetailForm: FC<Props> = ({
 
   return (
     <Form name='create-user-form' onSubmit={handleSubmit(onSubmit)}>
-      <Form.Group controlId='create-user-form-first-name'>
-        <Form.Label>First Name</Form.Label>
-        <Form.Control type='text' {...register('firstName')} isInvalid={!!errors.firstName} />
-        <Form.Control.Feedback type='invalid'>{errors.firstName?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group controlId='create-user-form-last-name'>
-        <Form.Label>Last Name</Form.Label>
-        <Form.Control type='text' {...register('lastName')} isInvalid={!!errors.lastName} />
-        <Form.Control.Feedback type='invalid'>{errors.lastName?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group controlId='create-user-form-email'>
-        <Form.Label>Email</Form.Label>
-        <Form.Control type='email' {...register('email')} isInvalid={!!errors.email} />
-        <Form.Control.Feedback type='invalid'>{errors.email?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group controlId='create-user-form-role'>
-        <Form.Label>Role</Form.Label>
-        <Form.Select id='role' aria-label='Role' {...register('role.roleName')} isInvalid={!!errors.role?.roleName}>
-          <option value='' disabled hidden>
-            Select a role
-          </option>
-          {availableRoles.map(role => (
-            <option key={role.id} value={role.roleName}>
-              {role.roleName}
-            </option>
-          ))}
-        </Form.Select>
-        <Form.Control.Feedback type='invalid'>{errors.role?.roleName?.message}</Form.Control.Feedback>
-      </Form.Group>
-      {availableAgencies.length > 0 && (
-        <Form.Group>
-          <Form.Label>Agency</Form.Label>
-          <Form.Select
-            id='agency'
-            aria-label='Select User Agency'
-            {...register('agency.agencyName')}
-            isInvalid={!!errors.agency?.agencyName}
-          >
-            <option value='' disabled hidden>
-              Select an agency
-            </option>
 
-            {availableAgencies.map(agency => (
-              <option key={agency.id} value={agency.agencyName}>
-                {agency.agencyName}
+      <Row>
+        <Col>
+          <Form.Group controlId='create-user-form-first-name'>
+            <Form.Label>First Name</Form.Label>
+            <Form.Control type='text' {...register('firstName')} isInvalid={!!errors.firstName} />
+            <Form.Control.Feedback type='invalid'>{errors.firstName?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group controlId='create-user-form-last-name'>
+            <Form.Label>Last Name</Form.Label>
+            <Form.Control type='text' {...register('lastName')} isInvalid={!!errors.lastName} />
+            <Form.Control.Feedback type='invalid'>{errors.lastName?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group controlId='create-user-form-email'>
+            <Form.Label>Email</Form.Label>
+            <Form.Control type='email' {...register('email')} isInvalid={!!errors.email} />
+            <Form.Control.Feedback type='invalid'>{errors.email?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col>
+          <Form.Group controlId='create-user-form-role'>
+            <Form.Label>Role</Form.Label>
+            <Form.Select id='role' aria-label='Role' {...register('role.roleName')} isInvalid={!!errors.role?.roleName}>
+              <option value='' disabled hidden>
+                Select a role
               </option>
-            ))}
-          </Form.Select>
-          <Form.Control.Feedback type='invalid'>{errors.agency?.agencyName?.message}</Form.Control.Feedback>
-        </Form.Group>
-      )}
-      <ButtonWrapper>
-        <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
-        <SubmitButton type='submit' disabled={!isValid}>
-          {submitButtonLabel}
-        </SubmitButton>
-      </ButtonWrapper>
+              {availableRoles.map(role => (
+                <option key={role.id} value={role.roleName}>
+                  {role.roleName}
+                </option>
+              ))}
+            </Form.Select>
+            <Form.Control.Feedback type='invalid'>{errors.role?.roleName?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+        <Col>
+          {availableAgencies.length > 0 && (
+            <Form.Group>
+              <Form.Label>Agency</Form.Label>
+              <Form.Select
+                id='agency'
+                aria-label='Select User Agency'
+                {...register('agency.agencyName')}
+                isInvalid={!!errors.agency?.agencyName}
+              >
+                <option value='' disabled hidden>
+                  Select an agency
+                </option>
+
+                {availableAgencies.map(agency => (
+                  <option key={agency.id} value={agency.agencyName}>
+                    {agency.agencyName}
+                  </option>
+                ))}
+              </Form.Select>
+              <Form.Control.Feedback type='invalid'>{errors.agency?.agencyName?.message}</Form.Control.Feedback>
+            </Form.Group>
+          )}
+        </Col>
+      </Row>
+      <SubmitButton className='mt-3' type='submit' disabled={!isValid}>
+        {submitButtonLabel}
+      </SubmitButton>
     </Form>
   );
 };

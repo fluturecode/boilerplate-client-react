@@ -1,14 +1,16 @@
-import { FC } from 'react';
-import { useHistory } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useGetAgenciesQuery } from 'common/api/agencyApi';
 import { useGetRolesQuery } from 'common/api/roleApi';
 import { useCreateUserMutation } from 'common/api/userApi';
-import { FormData, UserDetailForm } from '../components/UserDetailForm';
-import { useRbac } from 'features/rbac';
-import { useAuth } from 'features/auth/hooks';
-import { useGetAgenciesQuery } from 'common/api/agencyApi';
+import { FormCard, PageHeader } from 'common/components/Common';
 import * as notificationService from 'common/services/notification';
-import { PageWrapper } from 'common/styles/page';
-import { StyledFormWrapper, Title } from 'common/styles/form';
+import { StyledFormWrapper } from 'common/styles/form';
+import { useAuth } from 'features/auth/hooks';
+import { useRbac } from 'features/rbac';
+import { FC } from 'react';
+import { Card, Container } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
+import { FormData, UserDetailForm } from '../components/UserDetailForm';
 
 export const CreateUserView: FC = () => {
   const history = useHistory();
@@ -50,19 +52,32 @@ export const CreateUserView: FC = () => {
   const isLoading = isLoadingRoles || isLoadingAgencies;
 
   return (
-    <PageWrapper>
-      {!isLoading && (
-        <StyledFormWrapper>
-          <Title>Create User</Title>
-          <UserDetailForm
-            availableRoles={availableRoles}
-            availableAgencies={availableAgencies}
-            defaultValues={defaultValues}
-            onCancel={handleFormCancel}
-            onSubmit={handleFormSubmit}
-          />
-        </StyledFormWrapper>
-      )}
-    </PageWrapper>
+    <Container>
+      <PageHeader>
+        <div>
+          <h1>Create User</h1>
+          <Link to='/users'>
+            <FontAwesomeIcon icon={["fas", "chevron-left"]} />  Back to User List
+          </Link>
+        </div>
+      </PageHeader>
+
+      <FormCard>
+        <Card.Body>
+
+          {!isLoading && (
+            <StyledFormWrapper>
+              <UserDetailForm
+                availableRoles={availableRoles}
+                availableAgencies={availableAgencies}
+                defaultValues={defaultValues}
+                onCancel={handleFormCancel}
+                onSubmit={handleFormSubmit}
+              />
+            </StyledFormWrapper>
+          )}
+        </Card.Body>
+      </FormCard>
+    </Container>
   );
 };

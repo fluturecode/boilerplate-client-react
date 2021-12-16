@@ -1,18 +1,16 @@
-import { FC } from 'react';
-import { useHistory } from 'react-router-dom';
-import { AgencyDetailForm, FormData } from '../components/AgencyDetailForm';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCreateAgencyMutation } from 'common/api/agencyApi';
+import { FormCard, PageHeader } from 'common/components/Common';
 import * as notificationService from 'common/services/notification';
-import { PageWrapper } from 'common/styles/page';
-import { StyledFormWrapper, Title } from 'common/styles/form';
+import { StyledFormWrapper } from 'common/styles/form';
+import { FC } from 'react';
+import { Card, Container } from 'react-bootstrap';
+import { Link, useHistory } from 'react-router-dom';
+import { AgencyDetailForm, FormData } from '../components/AgencyDetailForm';
 
 export const CreateAgencyView: FC = () => {
   const history = useHistory();
   const [createAgency] = useCreateAgencyMutation();
-
-  const handleFormCancel = () => {
-    history.goBack();
-  };
 
   const handleFormSubmit = async (data: FormData) => {
     try {
@@ -25,11 +23,23 @@ export const CreateAgencyView: FC = () => {
   };
 
   return (
-    <PageWrapper>
-      <StyledFormWrapper>
-        <Title>Create Agency</Title>
-        <AgencyDetailForm submitButtonLabel='CREATE' onCancel={handleFormCancel} onSubmit={handleFormSubmit} />
-      </StyledFormWrapper>
-    </PageWrapper>
+    <Container>
+      <PageHeader>
+        <div>
+          <h1>Create Agency</h1>
+          <Link to='/agencies'>
+            <FontAwesomeIcon icon={["fas", "chevron-left"]} />  Back to Agency List
+          </Link>
+        </div>
+      </PageHeader>
+
+      <FormCard>
+        <Card.Body>
+          <StyledFormWrapper>
+            <AgencyDetailForm submitButtonLabel='Create' onSubmit={handleFormSubmit} />
+          </StyledFormWrapper>
+        </Card.Body>
+      </FormCard>
+    </Container>
   );
 };

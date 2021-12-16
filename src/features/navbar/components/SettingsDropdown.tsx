@@ -1,103 +1,49 @@
-// React imports
-import { FC } from 'react';
-
-// Third party library imports
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-import NavDropdown, { NavDropdownProps } from 'react-bootstrap/NavDropdown';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-// App imports
 import portraitPlaceholder from 'assets/img/portrait_placeholder.png';
 import { User } from 'common/models';
-
-// Based on the styled-components docs at https://styled-components.com/docs/api#caveat-with-function-components,
-// in order for typechecking to work correctly with styled components that extend a function components, we need
-// to define the component and it's type first as done here.
-const BootstrapNavDropdown: FC<NavDropdownProps> = ({ children, ...rest }) => (
-  <NavDropdown {...rest}>{children}</NavDropdown>
-);
-
-const StyledNavDropdown = styled(BootstrapNavDropdown)`
-  .dropdown-toggle.nav-link {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .dropdown-toggle.nav-link::after {
-    margin: 0;
-  }
-`;
-
-const DropdownMenuContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-`;
+import { FC } from 'react';
+import styled from 'styled-components';
 
 const ProfileInfoWrapper = styled.div`
+  background: #efefef;
+  width: 100%;
+  border-radius: 6px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 10px;
+  color: #666;
+  padding: 1rem;
+  font-size: 0.9rem;
 
   img {
     border-radius: 50%;
-    max-height: 50px;
-    max-width: 50px;
-    height: auto;
-    width: auto;
+    height: 32px;
+    width: 32px;
+    margin: 0;
+    margin-right: 0.75rem;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+
+  small {
+    color: #999;
   }
 `;
 
-const VerticalDivider = styled.span`
-  margin: 0 20px;
-  border-left: 1px solid #d3d3d3;
-`;
-
-const NavDropdownItemsWrapper = styled.div``;
-
 type Props = {
   user: User;
-  onNavbarToggle: () => void;
-  onSignOut: () => void;
-  // By default, the dropdown is positioned along the left side of its parent. Setting "alignRight" to true will align
-  // the dropdown along the right side of its parent.
-  alignRight?: boolean;
 };
 
-export const SettingsDropdown: FC<Props> = ({ user, onNavbarToggle, onSignOut, alignRight = false }) => {
-  const dropdownTitle = (
-    <>
-      <FontAwesomeIcon icon='user' />
-      <span>Hi {user.firstName}</span>
-    </>
-  );
+const UserDetail = styled.div`
+`;
 
+export const SettingsDropdown: FC<Props> = ({ user }) => {
   const fullName = `${user.firstName} ${user.lastName}`;
 
   return (
-    <StyledNavDropdown id='profile-nav-dropdown' title={dropdownTitle} align={alignRight ? 'end' : 'start'}>
-      <DropdownMenuContainer>
-        <ProfileInfoWrapper>
-          <img src={user.profilePicture || portraitPlaceholder} alt={fullName} />
-          <div>{user.firstName}</div>
-          <div>{user.lastName}</div>
-        </ProfileInfoWrapper>
-        <VerticalDivider />
-        <NavDropdownItemsWrapper>
-          <NavDropdown.Item as={Link} to={`/user/profile/${user.id}`}>
-            Profile
-          </NavDropdown.Item>
-          <NavDropdown.Item as={Link} to={`/user/change-password/${user.id}`}>
-            Change Password
-          </NavDropdown.Item>
-          <NavDropdown.Item onClick={onNavbarToggle}>Toggle Navigation Bar</NavDropdown.Item>
-          <NavDropdown.Item onClick={onSignOut}>Sign Out</NavDropdown.Item>
-        </NavDropdownItemsWrapper>
-      </DropdownMenuContainer>
-    </StyledNavDropdown>
+    <ProfileInfoWrapper>
+      <img width="24" height="24" src={user.profilePicture || portraitPlaceholder} alt={fullName} />
+      <UserDetail>
+        <div>{user.firstName} {user.lastName.charAt(0)}.</div>
+        <small>{user.role.roleName}</small>
+      </UserDetail>
+    </ProfileInfoWrapper>
   );
 };

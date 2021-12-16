@@ -1,10 +1,10 @@
-import { FC, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { Form } from 'react-bootstrap';
-import * as yup from 'yup';
+import { CustomButton } from 'common/styles/button';
+import { FC } from 'react';
+import { Col, Form, Row } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
 import { Constants } from 'utils/constants';
-import { ButtonWrapper, CancelButton, SubmitButton } from 'common/styles/button';
+import * as yup from 'yup';
 
 export type FormData = {
   email: string;
@@ -28,31 +28,60 @@ const schema: yup.SchemaOf<FormData> = yup.object().shape({
   lastName: yup.string().trim().required(Constants.errorMessages.LAST_NAME_REQUIRED),
 });
 
-export const SignUpForm: FC<Props> = ({ onSubmit, onCancel }) => {
+export const SignUpForm: FC<Props> = ({ onSubmit }) => {
   const {
     formState: { errors, isValid },
     handleSubmit,
     register,
-    trigger,
   } = useForm({
     resolver: yupResolver(schema),
     mode: 'all',
   });
 
-  // Trigger validation on first render.
-  useEffect(() => {
-    trigger();
-  }, [trigger]);
-
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+
+      <Row>
+        <Form.Group as={Col}>
+          <Form.Label htmlFor='firstName' placeholder='Enter your first name'>
+            First Name
+          </Form.Label>
+          <Form.Control
+            id='firstName'
+            type='text'
+            {...register('firstName')}
+            placeholder='First Name'
+            isInvalid={!!errors.firstName}
+          />
+          <Form.Control.Feedback type='invalid' role='alert'>
+            {errors.firstName?.message}
+          </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group as={Col}>
+          <Form.Label htmlFor='lastName' placeholder='Enter your last name'>
+            Last Name
+          </Form.Label>
+          <Form.Control
+            id='lastName'
+            type='text'
+            {...register('lastName')}
+            placeholder='Last Name'
+            isInvalid={!!errors.lastName}
+          />
+          <Form.Control.Feedback type='invalid' role='alert'>
+            {errors.lastName?.message}
+          </Form.Control.Feedback>
+        </Form.Group>
+      </Row>
+      
       <Form.Group>
         <Form.Label htmlFor='email'>Email</Form.Label>
         <Form.Control
           id='email'
           type='email'
           {...register('email')}
-          placeholder='Enter your email'
+          placeholder='Enter your Email'
           isInvalid={!!errors.email}
         />
         <Form.Control.Feedback type='invalid' role='alert'>
@@ -67,49 +96,19 @@ export const SignUpForm: FC<Props> = ({ onSubmit, onCancel }) => {
           id='confirmEmail'
           type='email'
           {...register('confirmEmail')}
-          placeholder='Confirm your email'
+          placeholder='Confirm your Email'
           isInvalid={!!errors.confirmEmail}
         />
         <Form.Control.Feedback type='invalid' role='alert'>
           {errors.confirmEmail?.message}
         </Form.Control.Feedback>
       </Form.Group>
-      <Form.Group>
-        <Form.Label htmlFor='firstName' placeholder='Enter your first name'>
-          First Name
-        </Form.Label>
-        <Form.Control
-          id='firstName'
-          type='text'
-          {...register('firstName')}
-          placeholder='Enter your first name'
-          isInvalid={!!errors.firstName}
-        />
-        <Form.Control.Feedback type='invalid' role='alert'>
-          {errors.firstName?.message}
-        </Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label htmlFor='lastName' placeholder='Enter your last name'>
-          Last Name
-        </Form.Label>
-        <Form.Control
-          id='lastName'
-          type='text'
-          {...register('lastName')}
-          placeholder='Enter your last name'
-          isInvalid={!!errors.lastName}
-        />
-        <Form.Control.Feedback type='invalid' role='alert'>
-          {errors.lastName?.message}
-        </Form.Control.Feedback>
-      </Form.Group>
-      <ButtonWrapper>
-        <CancelButton onClick={onCancel}>CANCEL</CancelButton>
-        <SubmitButton type='submit' disabled={!isValid}>
-          SIGN UP
-        </SubmitButton>
-      </ButtonWrapper>
+
+      <div className='d-grid mt-3'>
+        <CustomButton type='submit' disabled={!isValid}>
+          Register
+        </CustomButton>
+      </div>
     </Form>
   );
 };

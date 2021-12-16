@@ -1,25 +1,32 @@
 const colors = {
-  primaryBlue: '#3774B6',
-  secondaryBlue: '#4AABE8',
+  primaryBlue: '#0d6efd',
+  secondaryBlue: '#6610f2',
   lightAccent: '#9DD6F3',
   accent: '#1F4A78',
-  darkAccent: '#22304D',
+  darkAccent: '#060B57',
   lightBackground: '#F2F2F2',
   white: '#FFFFFF',
-  black: '000000',
-  dangerRed: '#AD0404',
-
+  offWhite: '#fafafa',
+  black: '#333333',
+  dangerRed: '#dc3545',
+  faded: '#999',
 };
 
 export default {
+  colors,
+
   app: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.offWhite,
+  },
+
+  nav: {
+    backgroundColor: colors.offWhite,
   },
 
   buttons: {
     cancelBackgroundColor: colors.lightBackground,
-    cancelBorderColor: colors.primaryBlue,
-    cancelTextColor: colors.primaryBlue,
+    cancelBorderColor: colors.lightBackground,
+    cancelTextColor: colors.black,
     submitBackgroundColor: colors.primaryBlue,
     submitBorderColor: colors.primaryBlue,
     submitTextColor: colors.white,
@@ -33,6 +40,7 @@ export default {
     createTextColor: colors.white,
     createHoverBackgroundColor: colors.accent,
     createHoverBorderColor: colors.accent,
+    backgroundColor: colors.primaryBlue,
   },
 
   footer: {
@@ -56,10 +64,10 @@ export default {
 
   modals: {
     confirmation: {
-      contentBackgroundColor: colors.lightBackground,
-      contentBorderColor: colors.lightBackground,
-      titleTextColor: colors.primaryBlue,
-      bodyTextColor: colors.primaryBlue,
+      contentBackgroundColor: colors.white,
+      contentBorderColor: colors.white,
+      titleTextColor: colors.black,
+      bodyTextColor: colors.faded,
       cancelButtonBackgroundColor: colors.lightBackground,
       cancelButtonBorderColor: colors.lightBackground,
       cancelButtonTextColor: colors.primaryBlue,

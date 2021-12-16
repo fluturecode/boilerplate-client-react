@@ -30,6 +30,7 @@
             }
         ],
         "arrow-body-style": "off",
+        "react/no-unescaped-entities": "off",
         "no-param-reassign": "off",
         "import/prefer-default-export": "off",
         "no-shadow": "off",

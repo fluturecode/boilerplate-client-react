@@ -1,8 +1,9 @@
 import { yupResolver } from '@hookform/resolvers/yup';
 import { PhoneInput } from 'common/components/PhoneInput';
 import { Agent } from 'common/models';
-import { ButtonWrapper, CancelButton, SubmitButton } from 'common/styles/button';
-import { FC, useEffect } from 'react';
+import { SubmitButton } from 'common/styles/button';
+import { FC } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import Form from 'react-bootstrap/Form';
 import { Controller, useForm } from 'react-hook-form';
 import { Constants } from 'utils/constants';
@@ -43,16 +44,13 @@ const schema = yup.object().shape({
 
 export const AgentDetailForm: FC<Props> = ({
   defaultValues = {},
-  submitButtonLabel = 'SUBMIT',
-  cancelButtonLabel = 'CANCEL',
+  submitButtonLabel = 'Submit',
   onSubmit,
-  onCancel,
 }) => {
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
-    trigger,
     control
   } = useForm<FormData>({
     resolver: yupResolver(schema),
@@ -63,24 +61,25 @@ export const AgentDetailForm: FC<Props> = ({
       address: { ...defaultValues.address, state: defaultValues?.address?.state ?? '' },
     },
   });
-
-  // Trigger validation on first render.
-  useEffect(() => {
-    trigger();
-  }, [trigger]);
   
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
-      <Form.Group controlId='create-agent-form-agent-name'>
-        <Form.Label>Name</Form.Label>
-        <Form.Control type='text' {...register('name')} isInvalid={!!errors.name} />
-        <Form.Control.Feedback type='invalid'>{errors.name?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Email</Form.Label>
-        <Form.Control type='email' {...register('email')} isInvalid={!!errors.email} />
-        <Form.Control.Feedback type='invalid'>{errors.email?.message}</Form.Control.Feedback>
-      </Form.Group>
+      <Row>
+        <Col>
+          <Form.Group controlId='create-agent-form-agent-name'>
+            <Form.Label>Name</Form.Label>
+            <Form.Control type='text' {...register('name')} isInvalid={!!errors.name} />
+            <Form.Control.Feedback type='invalid'>{errors.name?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+        <Col>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
+            <Form.Control type='email' {...register('email')} isInvalid={!!errors.email} />
+            <Form.Control.Feedback type='invalid'>{errors.email?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+      </Row>
       <Form.Group>
         <Form.Label>Description</Form.Label>
         <Form.Control type='text' {...register('description')} isInvalid={!!errors.description} />
@@ -107,33 +106,41 @@ export const AgentDetailForm: FC<Props> = ({
         <Form.Control type='text' {...register('address.address2')} isValid={!!errors.address?.address2} />
         <Form.Control.Feedback type='invalid'>{errors.address?.address2?.message}</Form.Control.Feedback>
       </Form.Group>
-      <Form.Group>
-        <Form.Label>City</Form.Label>
-        <Form.Control type='text' {...register('address.city')} isInvalid={!!errors.address?.city} />
-        <Form.Control.Feedback type='invalid'>{errors.address?.city?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>State</Form.Label>
-        <Form.Select {...register('address.state')} isInvalid={!!errors.address?.state}>
-          {stateList.map(({ name, value }) => (
-            <option key={value} value={value}>
-              {name}
-            </option>
-          ))}
-        </Form.Select>
-        <Form.Control.Feedback type='invalid'>{errors.address?.state?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>Zip Code</Form.Label>
-        <Form.Control type='text' {...register('address.zipCode')} isInvalid={!!errors.address?.zipCode} />
-        <Form.Control.Feedback type='invalid'>{errors.address?.zipCode?.message}</Form.Control.Feedback>
-      </Form.Group>
-      <ButtonWrapper>
-        <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
-        <SubmitButton type='submit' disabled={!isValid}>
-          {submitButtonLabel}
-        </SubmitButton>
-      </ButtonWrapper>
+      <Row>
+        <Col>
+          <Form.Group>
+            <Form.Label>City</Form.Label>
+            <Form.Control type='text' {...register('address.city')} isInvalid={!!errors.address?.city} />
+            <Form.Control.Feedback type='invalid'>{errors.address?.city?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+
+        <Col>
+          <Form.Group>
+            <Form.Label>State</Form.Label>
+            <Form.Select {...register('address.state')} isInvalid={!!errors.address?.state}>
+              {stateList.map(({ name, value }) => (
+                <option key={value} value={value}>
+                  {name}
+                </option>
+              ))}
+            </Form.Select>
+            <Form.Control.Feedback type='invalid'>{errors.address?.state?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+
+        <Col>
+          <Form.Group>
+            <Form.Label>Zip Code</Form.Label>
+            <Form.Control type='text' {...register('address.zipCode')} isInvalid={!!errors.address?.zipCode} />
+            <Form.Control.Feedback type='invalid'>{errors.address?.zipCode?.message}</Form.Control.Feedback>
+          </Form.Group>
+        </Col>
+      </Row>
+      
+      <SubmitButton  className='mt-3' type='submit' disabled={!isValid}>
+        {submitButtonLabel}
+      </SubmitButton>
     </Form>
   );
 };
