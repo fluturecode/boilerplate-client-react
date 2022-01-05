@@ -25,6 +25,12 @@ export const CancelButton = styled(BootstrapButton)`
   text-transform: uppercase;
   padding: 0.4rem 1rem;
   border-radius: 6px;
+
+  &:hover {
+    background-color: ${props => props.theme.buttons.cancelBackgroundColor};
+    border-color: ${props => props.theme.buttons.cancelBorderColor};
+    color: black;
+  }
 `;
 
 export const SubmitButton = styled(BootstrapButton)`

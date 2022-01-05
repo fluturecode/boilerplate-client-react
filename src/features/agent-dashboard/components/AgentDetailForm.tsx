@@ -64,6 +64,7 @@ export const AgentDetailForm: FC<Props> = ({
   
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      <h5>Profile</h5>
       <Row>
         <Col>
           <Form.Group controlId='create-agent-form-agent-name'>
@@ -96,6 +97,9 @@ export const AgentDetailForm: FC<Props> = ({
           />
         <Form.Control.Feedback type='invalid'>{errors.phoneNumber?.message}</Form.Control.Feedback>
       </Form.Group>
+
+      <h5 className='mt-3'>Address</h5>
+
       <Form.Group>
         <Form.Label>Address</Form.Label>
         <Form.Control type='text' {...register('address.address1')} isInvalid={!!errors.address?.address1} />
@@ -106,6 +110,7 @@ export const AgentDetailForm: FC<Props> = ({
         <Form.Control type='text' {...register('address.address2')} isValid={!!errors.address?.address2} />
         <Form.Control.Feedback type='invalid'>{errors.address?.address2?.message}</Form.Control.Feedback>
       </Form.Group>
+
       <Row>
         <Col>
           <Form.Group>
