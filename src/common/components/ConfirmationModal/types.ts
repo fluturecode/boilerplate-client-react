@@ -5,4 +5,5 @@ export type ConfirmationModalProps = {
   confirmButtonLabel?: string;
   onCancel: VoidFunction;
   onConfirm: VoidFunction;
+  loading?: boolean;
 };

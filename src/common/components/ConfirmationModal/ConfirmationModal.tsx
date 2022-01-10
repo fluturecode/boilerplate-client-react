@@ -2,7 +2,8 @@ import { FC } from 'react';
 import Modal, { ModalProps } from 'react-bootstrap/Modal';
 import { ConfirmationModalProps } from './types';
 import styled from 'styled-components';
-import { CancelButton, SubmitButton } from 'common/styles/button';
+import { CancelButton } from 'common/styles/button';
+import { LoadingButton } from '../LoadingButton';
 
 // Based on the styled-components docs at https://styled-components.com/docs/api#caveat-with-function-components,
 // in order for typechecking to work correctly with styled components that extend a function components, we need
@@ -47,13 +48,16 @@ export const ConfirmationModal: FC<ConfirmationModalProps> = ({
   confirmButtonLabel = 'CONFIRM',
   onCancel,
   onConfirm,
+  loading,
 }) => (
   <StyledModal show={show} onHide={onCancel}>
     <Modal.Title>{message}</Modal.Title>
     <Modal.Body>Do you want to continue?</Modal.Body>
     <Modal.Footer>
       <CancelButton onClick={onCancel}>{cancelButtonLabel}</CancelButton>
-      <SubmitButton onClick={onConfirm}>{confirmButtonLabel}</SubmitButton>
+      <LoadingButton loading={loading} onClick={onConfirm}>
+        {confirmButtonLabel}
+      </LoadingButton>
     </Modal.Footer>
   </StyledModal>
 );

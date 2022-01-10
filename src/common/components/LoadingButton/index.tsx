@@ -7,6 +7,7 @@ const BootstrapButton: FC<ButtonProps> = ({ children, ...rest }) => <Button {...
 type LoadingButtonProps = {
   disabled?: boolean;
   loading?: boolean;
+  onClick?: () => void;
 };
 
 const StyledButton = styled(BootstrapButton)`
@@ -20,9 +21,9 @@ const StyledButton = styled(BootstrapButton)`
   }
 `;
 
-export const LoadingButton: FC<LoadingButtonProps> = ({ disabled, loading, children }) => {
+export const LoadingButton: FC<LoadingButtonProps> = ({ disabled, loading, children, onClick }) => {
   return (
-    <StyledButton type='submit' disabled={disabled || loading}>
+    <StyledButton type='submit' disabled={disabled || loading} onClick={onClick}>
       {loading && <span className='spinner-border spinner-border-sm' />}
       {children}
     </StyledButton>
