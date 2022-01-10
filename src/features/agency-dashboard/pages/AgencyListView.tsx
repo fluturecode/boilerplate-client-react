@@ -22,16 +22,23 @@ export const AgencyListView: FC = () => {
   const { userHasPermission } = useRbac();
   const { data: agencies = [], isLoading: isLoadingAgencies, isFetching: isFetchingAgencies } = useGetAgenciesQuery();
   const [deleteAgency] = useDeleteAgencyMutation();
-  const { Modal: ConfirmationModal, openModal, closeModal } = useConfirmationModal();
+  const { Modal: ConfirmationModal, openModal, closeModal, setIsLoading } = useConfirmationModal();
   const isPageLoading = isLoadingAgencies || isFetchingAgencies;
 
   const handleDelete = (agency: Agency) => {
     const message = `Delete ${agency.agencyName}?`;
 
-    const onConfirm = () => {
-      deleteAgency(agency.id);
-      closeModal();
+    const onConfirm = async () => {
+      setIsLoading(true);
+      await new Promise(resolve => {
+        setTimeout(resolve, 2000);
+      });
 
+      await deleteAgency(agency.id);
+      setIsLoading(false);
+      // deleteAgency(agency.id);
+
+      closeModal();
       notificationService.showSuccessMessage('Agency deleted.');
     };
 

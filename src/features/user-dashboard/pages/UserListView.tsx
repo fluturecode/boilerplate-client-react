@@ -63,8 +63,6 @@ export const UserListView: FC = () => {
 
       await deleteUser(user.id);
       setIsLoading(false);
-
-      // setIsLoading(true);
       // deleteUser(user.id);
 
       closeModal();
