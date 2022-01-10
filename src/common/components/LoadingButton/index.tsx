@@ -15,6 +15,7 @@ const StyledButton = styled(BootstrapButton)`
   background-color: ${props => props.theme.buttons.submitBackgroundColor};
   border-color: ${props => props.theme.buttons.submitBorderColor};
   padding: 0.5rem 1rem;
+  width: 40%;
 
   & .spinner-border {
     margin-right: 1em;

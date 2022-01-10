@@ -23,11 +23,17 @@ export interface ConfirmationModalManager {
    * Closes the modal.
    */
   closeModal: () => void;
+
+  /**
+   * Set the loading state of the modal.
+   */
+  setIsLoading: (loading: boolean) => void;
 }
 
 export const useConfirmationModal = (): ConfirmationModalManager => {
   const [show, setShow] = useState(false);
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const [confirmCallback, setConfirmCallback] = useState(() => noop);
   const [cancelCallback, setCancelCallback] = useState(() => noop);
 
@@ -45,13 +51,24 @@ export const useConfirmationModal = (): ConfirmationModalManager => {
     setShow(false);
   }, []);
 
+  const setIsLoading = useCallback((loading: boolean) => {
+    setLoading(loading);
+  }, []);
+
   const Modal: FC = () => (
-    <ConfirmationModal show={show} message={message} onConfirm={confirmCallback} onCancel={cancelCallback} />
+    <ConfirmationModal
+      loading={loading}
+      show={show}
+      message={message}
+      onConfirm={confirmCallback}
+      onCancel={cancelCallback}
+    />
   );
 
   return {
     Modal,
     openModal,
     closeModal,
+    setIsLoading,
   };
 };
