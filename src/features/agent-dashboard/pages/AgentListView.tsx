@@ -25,7 +25,7 @@ export const AgentListView: FC = () => {
   const { userHasPermission } = useRbac();
   const { data: agents = [], isLoading: isLoadingAgents, isFetching: isFetchingAgents } = useGetAgentsQuery();
   const [deleteAgent] = useDeleteAgentMutation();
-  const { Modal: ConfirmationModal, openModal, closeModal } = useConfirmationModal();
+  const { Modal: ConfirmationModal, openModal, closeModal, setIsLoading } = useConfirmationModal();
   const isPageLoading = isLoadingAgents || isFetchingAgents;
 
   const navigateToUpdateView = (agent: Agent) => {
@@ -35,8 +35,16 @@ export const AgentListView: FC = () => {
   const handleDelete = (agent: Agent) => {
     const message = `Delete ${agent.name}?`;
 
-    const onConfirm = () => {
-      deleteAgent(agent.id);
+    const onConfirm = async () => {
+      setIsLoading(true);
+      await new Promise(resolve => {
+        setTimeout(resolve, 2000);
+      });
+
+      await deleteAgent(agent.id);
+      setIsLoading(false);
+      // deleteAgent(agent.id);
+
       closeModal();
       notificationService.showSuccessMessage('Agent deleted.');
     };
