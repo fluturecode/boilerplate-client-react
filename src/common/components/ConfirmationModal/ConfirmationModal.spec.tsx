@@ -81,7 +81,7 @@ describe('ConfirmationModal', () => {
 
     const button = screen.getByText(props.confirmButtonLabel as string);
 
-    expect(button.getAttribute('type')).toBe('button');
+    expect(button.getAttribute('type')).toBe('submit');
   });
 
   it('should call the "onCancel" function prop when the cancel button is clicked', () => {
