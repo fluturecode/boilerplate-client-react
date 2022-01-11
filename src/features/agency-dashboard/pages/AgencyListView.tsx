@@ -105,7 +105,7 @@ export const AgencyListView: FC = () => {
                   </h2>
                   <div>
                     <p>
-                      {item.userCount}
+                      {item.userCount || 0}
                       <span>User{item.userCount === 1 ? '' : 's'}</span>
                     </p>
                   </div>

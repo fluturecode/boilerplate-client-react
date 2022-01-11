@@ -5,13 +5,16 @@ import styled from 'styled-components';
 import { ActionButtonProps } from './types';
 
 const ActionButtonStyles = styled.span`
-  background: #ddd;
-  margin-left: 0.5rem;
   width: 28px;
   height: 28px;
   display: inline-block;
   text-align: center;
-  border-radius: 50%;
+  i, svg path { color: #333; }
+
+  &:hover {
+    border-radius: 50%;
+    background: #ccc;
+  }
 `;
 
 export const ActionButton: FC<ActionButtonProps> = ({ icon, tooltipText, onClick, show }) =>
