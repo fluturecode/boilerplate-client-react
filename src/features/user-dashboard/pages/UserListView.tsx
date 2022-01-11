@@ -15,6 +15,7 @@ import { WithLoadingOverlay } from 'common/components/LoadingSpinner';
 import { HasPermission, useRbac } from 'features/rbac';
 import * as notificationService from 'common/services/notification';
 import { CreateButton } from 'common/styles/button';
+import { usePageableQuery } from 'common/api/paginate';
 
 type UserTableItem = {
   id: number;
@@ -29,7 +30,11 @@ type UserTableItem = {
 export const UserListView: FC = () => {
   const history = useHistory();
   const { userHasPermission } = useRbac();
-  const { data: users = [], isLoading: isLoadingUsers, isFetching: isFetchingUsers } = useGetUsersQuery();
+  const {
+    data: users = [],
+    isLoading: isLoadingUsers,
+    isFetching: isFetchingUsers,
+  } = usePageableQuery<User, 'User'>(useGetUsersQuery);
   const [deleteUser] = useDeleteUserMutation();
   const [forgotPassword] = useForgotPasswordMutation();
   const [resendActivationEmail] = useResendActivationEmailMutation();
